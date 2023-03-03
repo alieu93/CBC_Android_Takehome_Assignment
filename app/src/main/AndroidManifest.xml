@@ -12,7 +12,7 @@
         android:theme="@style/Theme.RBC_Android_Takehome_Adam"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".AccountsListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.RBC_Android_Takehome_Adam">
