@@ -1,5 +1,7 @@
 package com.example.rbc_android_takehome_adam.views;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rbc_android_takehome_adam.AccountDetailsActivity;
 import com.example.rbc_android_takehome_adam.R;
+import com.example.rbc_android_takehome_adam.models.AccountData;
+import com.example.rbc_android_takehome_adam.models.AccountDataType;
 import com.example.rbc_android_takehome_adam.models.AccountListViewItem;
 import com.rbc.rbcaccountlibrary.Account;
 
@@ -74,6 +79,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         private final TextView accountBalanceTextView;
         private final View topDividerView;
         private final View bottomDividerView;
+        private final View accountConstraintView;
 
         public AccountViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +88,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
             accountBalanceTextView = (TextView) itemView.findViewById(R.id.accountBalance);
             topDividerView = itemView.findViewById(R.id.topDivider);
             bottomDividerView = itemView.findViewById(R.id.bottomDivider);
+            accountConstraintView = itemView.findViewById(R.id.accountConstraintView);
         }
 
         @Override
@@ -93,6 +100,15 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
             accountBalanceTextView.setText(account.getBalance());
             topDividerView.setVisibility(isFirst ? View.GONE : View.VISIBLE);
             bottomDividerView.setVisibility(isLast ? View.VISIBLE : View.GONE);
+
+            accountConstraintView.setOnClickListener(view -> {
+                Context context = itemView.getContext();
+                context.startActivity(AccountDetailsActivity.Companion.getIntent(context, buildAccountData(account)));
+            });
+        }
+
+        private AccountData buildAccountData(Account account) {
+            return new AccountData(account.getBalance(), account.getName(), account.getName(), AccountDataType.valueOf(account.getType().toString()));
         }
     }
 
