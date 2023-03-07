@@ -7,4 +7,9 @@ data class AccountData(
     val name: String,
     val number: String,
     val type: AccountDataType
-) : Serializable
+) : Serializable {
+
+    fun isCreditAccount(): Boolean {
+        return AccountDataType.CREDIT_CARD == type
+    }
+}

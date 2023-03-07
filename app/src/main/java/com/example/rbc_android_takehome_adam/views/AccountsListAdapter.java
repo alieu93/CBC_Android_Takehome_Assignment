@@ -108,7 +108,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         }
 
         private AccountData buildAccountData(Account account) {
-            return new AccountData(account.getBalance(), account.getName(), account.getName(), AccountDataType.valueOf(account.getType().toString()));
+            return new AccountData(account.getBalance(), account.getName(), account.getNumber(), AccountDataType.valueOf(account.getType().toString()));
         }
     }
 

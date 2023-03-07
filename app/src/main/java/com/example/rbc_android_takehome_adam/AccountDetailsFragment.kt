@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.rbc_android_takehome_adam.databinding.FragmentAccountDetailsBinding
-import com.example.rbc_android_takehome_adam.databinding.FragmentAccountsListBinding
 import com.example.rbc_android_takehome_adam.models.AccountData
 import com.example.rbc_android_takehome_adam.models.AccountDetailsViewModel
-import com.example.rbc_android_takehome_adam.models.AccountsViewModel
 
 class AccountDetailsFragment : Fragment() {
     private var _binding: FragmentAccountDetailsBinding? = null
@@ -28,6 +26,7 @@ class AccountDetailsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setAccountDetails(accountsDetailViewModel.currentAccountData)
+        accountsDetailViewModel.getTransactionsForAccount()
     }
 
     private fun setAccountDetails(accountData: AccountData) {
