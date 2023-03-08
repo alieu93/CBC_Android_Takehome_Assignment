@@ -1,7 +1,6 @@
 package com.example.rbc_android_takehome_adam.views;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
     @Override
     public int getItemViewType(int position) {
         if (accountList.get(position).component1() != null) {
-            return R.layout.view_account_list_header;
+            return R.layout.view_list_header;
         } else {
             return R.layout.view_account;
         }

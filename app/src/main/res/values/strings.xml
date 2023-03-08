@@ -6,6 +6,7 @@
     <string name="account_details_activity_label">Account Details</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="transaction_header_label">Transactions</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

@@ -27,6 +27,29 @@ class AccountDetailsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         setAccountDetails(accountsDetailViewModel.currentAccountData)
         accountsDetailViewModel.getTransactionsForAccount()
+
+        accountsDetailViewModel.allTransactionList.observe(viewLifecycleOwner) { transactions ->
+            //TODO Implement RecyclerView with date headers and transactions themselves
+            showLoading(false)
+        }
+
+        accountsDetailViewModel.showTransactionError.observe(viewLifecycleOwner) { showTransactionError ->
+            //TODO Implement error UI and show it
+        }
+
+        accountsDetailViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.loadingSpinner.visibility = View.VISIBLE
+            binding.transactionListRecyclerView.visibility = View.GONE
+        } else {
+            binding.loadingSpinner.visibility = View.GONE
+            binding.transactionListRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     private fun setAccountDetails(accountData: AccountData) {

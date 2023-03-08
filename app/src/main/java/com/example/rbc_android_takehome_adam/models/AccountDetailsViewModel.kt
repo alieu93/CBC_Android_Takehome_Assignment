@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.rbc.rbcaccountlibrary.AccountProvider
 import com.rbc.rbcaccountlibrary.Transaction
 import kotlinx.coroutines.*
+import java.util.*
 
 class AccountDetailsViewModel(private val accountProvider: AccountProvider) : ViewModel() {
-    val hasTransactionError = MutableLiveData<Boolean>()
+    private val hasTransactionError = MutableLiveData<Boolean>()
     val showTransactionError = MutableLiveData<Boolean>()
     val isLoading = MutableLiveData<Boolean>()
     private lateinit var _currentAccountData: AccountData
@@ -18,8 +19,8 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
             _currentAccountData = value
         }
 
-    private var _allTransactionsList: List<Transaction> = emptyList()
-    val allTransactionList = MutableLiveData<List<Transaction>>()
+    private var _allTransactionsList: List<TransactionRow> = emptyList()
+    val allTransactionList = MutableLiveData<List<TransactionRow>>()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         t.printStackTrace()
@@ -43,8 +44,8 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
 
             //Possible for one call to fail but not the other, so if both calls (or just one for all non-credit card), show error
             if (hasTransactionError.value == true && allTransactions.isEmpty()) {
-                isLoading.value = false
-                showTransactionError.value = true
+                isLoading.postValue(false)
+                showTransactionError.postValue(true)
             } else {
                 addToAllTransactionList(allTransactions)
             }
@@ -52,14 +53,32 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
     }
 
     private fun addToAllTransactionList(transactions: MutableList<Transaction>) {
-        //Because the assignment requirements are on newest first only, I chose to keep this here
-        //if it were ever expanded upon to including sorting by earliest to newest, this would not be good design
-        transactions.sortByDescending { transaction ->
-            transaction.date
+        isLoading.postValue(false)
+        if (transactions.isEmpty()) {
+            _allTransactionsList = emptyList()
+        } else {
+            //Because the assignment requirements are on newest first only, I chose to keep this here
+            //if it were ever expanded upon to including sorting by earliest to newest, this would not be good design
+            transactions.sortByDescending { transaction ->
+                transaction.date
+            }
+            _allTransactionsList = mapToTransactionRowList(transactions)
+            allTransactionList.postValue(_allTransactionsList)
         }
-        _allTransactionsList = transactions
-        isLoading.value = false
-        allTransactionList.postValue(_allTransactionsList)
+    }
+
+    private fun mapToTransactionRowList(allTransactionList: MutableList<Transaction>) : List<TransactionRow> {
+        val transactionRowList = mutableListOf<TransactionRow>()
+        var currentDate: Calendar? = null
+        for (transaction in allTransactionList) {
+            if (transaction.date != currentDate) {
+                currentDate = transaction.date
+                transactionRowList.add(TransactionRow.TransactionHeader(currentDate.toString()))
+            }
+
+            transactionRowList.add(TransactionRow.TransactionData(transaction.amount, transaction.date, transaction.description))
+        }
+        return transactionRowList
     }
 
     //Observations were made that both these transaction call will fail from time to time
@@ -69,7 +88,7 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
         try {
             return accountProvider.getTransactions(accountNumber)
         } catch (e: Exception) {
-            hasTransactionError.value = true
+            hasTransactionError.postValue(true)
             e.printStackTrace()
         }
         return emptyList()
@@ -79,7 +98,7 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
         try {
             return accountProvider.getAdditionalCreditCardTransactions(accountNumber)
         } catch (e: Exception) {
-            hasTransactionError.value = true
+            hasTransactionError.postValue(true)
             e.printStackTrace()
         }
         return emptyList()
