@@ -1,4 +1,4 @@
-package com.example.rbc_android_takehome_adam.models
+package com.example.rbc_android_takehome_adam.data
 
 import java.util.*
 

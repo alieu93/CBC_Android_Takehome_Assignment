@@ -1,9 +1,10 @@
 package com.example.rbc_android_takehome_adam.models
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.rbc_android_takehome_adam.data.AccountData
+import com.example.rbc_android_takehome_adam.data.AccountDataType
 import com.rbc.rbcaccountlibrary.Account
 import com.rbc.rbcaccountlibrary.AccountProvider
 import com.rbc.rbcaccountlibrary.AccountType
@@ -41,9 +42,9 @@ class AccountsViewModel(private val accountProvider: AccountProvider) : ViewMode
         for (account in sortedAccountList) {
             if (currentType != account.type) {
                 currentType = account.type
-                accountListViewItems.add(AccountListViewItem(currentType.name, null))
+                accountListViewItems.add(AccountListViewItem.AccountHeader(AccountDataType.valueOf(account.type.toString())))
             }
-            accountListViewItems.add(AccountListViewItem(null, account))
+            accountListViewItems.add(AccountListViewItem.AccountListData(AccountData(account.balance, account.name, account.number, AccountDataType.valueOf(account.type.toString()))))
         }
 
         return accountListViewItems

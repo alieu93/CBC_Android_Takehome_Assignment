@@ -1,16 +1,11 @@
 package com.example.rbc_android_takehome_adam
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
-import android.view.View
-import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.rbc_android_takehome_adam.data.AccountData
 import com.example.rbc_android_takehome_adam.databinding.ActivityAccountDetailsBinding
 import com.example.rbc_android_takehome_adam.models.*
 import com.rbc.rbcaccountlibrary.AccountProvider

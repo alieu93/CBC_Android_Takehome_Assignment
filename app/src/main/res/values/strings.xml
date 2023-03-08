@@ -7,6 +7,9 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="transaction_header_label">Transactions</string>
+    <string name="transaction_error_message">Unable to retrieve transactions.</string>
+    <string name="transaction_retry">Retry</string>
+    <string name="transaction_not_found">No transactions were found for this account.</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

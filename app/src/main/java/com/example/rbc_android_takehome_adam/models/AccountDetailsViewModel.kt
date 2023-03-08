@@ -3,6 +3,8 @@ package com.example.rbc_android_takehome_adam.models
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.rbc_android_takehome_adam.data.AccountData
+import com.example.rbc_android_takehome_adam.data.TransactionRow
 import com.rbc.rbcaccountlibrary.AccountProvider
 import com.rbc.rbcaccountlibrary.Transaction
 import kotlinx.coroutines.*
@@ -56,6 +58,7 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
         isLoading.postValue(false)
         if (transactions.isEmpty()) {
             _allTransactionsList = emptyList()
+            allTransactionList.postValue(_allTransactionsList)
         } else {
             //Because the assignment requirements are on newest first only, I chose to keep this here
             //if it were ever expanded upon to including sorting by earliest to newest, this would not be good design
@@ -73,12 +76,20 @@ class AccountDetailsViewModel(private val accountProvider: AccountProvider) : Vi
         for (transaction in allTransactionList) {
             if (transaction.date != currentDate) {
                 currentDate = transaction.date
-                transactionRowList.add(TransactionRow.TransactionHeader(currentDate.toString()))
+                transactionRowList.add(TransactionRow.TransactionHeader(getFormattedDate(currentDate)))
             }
 
             transactionRowList.add(TransactionRow.TransactionData(transaction.amount, transaction.date, transaction.description))
         }
         return transactionRowList
+    }
+
+    private fun getFormattedDate(date: Calendar): String {
+        val monthString = date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
+        val dayOfMonthString = date.get(Calendar.DAY_OF_MONTH).toString()
+        val yearString = date.get(Calendar.YEAR).toString()
+
+        return monthString.plus(" ").plus(dayOfMonthString).plus(", ").plus(yearString)
     }
 
     //Observations were made that both these transaction call will fail from time to time

@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rbc_android_takehome_adam.AccountDetailsActivity;
 import com.example.rbc_android_takehome_adam.R;
-import com.example.rbc_android_takehome_adam.models.AccountData;
-import com.example.rbc_android_takehome_adam.models.AccountDataType;
+import com.example.rbc_android_takehome_adam.data.AccountData;
 import com.example.rbc_android_takehome_adam.models.AccountListViewItem;
-import com.rbc.rbcaccountlibrary.Account;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());//.inflate(R.layout.view_account, parent, false);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(viewType, parent, false);
         if (viewType == R.layout.view_account) {
             return new AccountViewHolder(view);
@@ -49,7 +47,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (accountList.get(position).component1() != null) {
+        if (accountList.get(position) instanceof AccountListViewItem.AccountHeader) {
             return R.layout.view_list_header;
         } else {
             return R.layout.view_account;
@@ -66,8 +64,9 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
         @Override
         void setListData(AccountListViewItem accountListViewItem, boolean isFirst, boolean isLast) {
-            String headerString = accountListViewItem.getHeader();
-            assert accountListViewItem.component1() != null;
+            AccountListViewItem.AccountHeader header = (AccountListViewItem.AccountHeader) accountListViewItem;
+            String headerString = header.getAccountDataType().getTypeName();
+            assert headerString != null;
             headerTitleTextView.setText(headerString);
         }
     }
@@ -92,23 +91,21 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
         @Override
         void setListData(AccountListViewItem accountListViewItem, boolean isFirst, boolean isLast) {
-            Account account = accountListViewItem.getAccount();
-            assert account != null;
-            accountDisplayTextView.setText(account.getName());
-            accountNumberTextView.setText(account.getNumber());
-            accountBalanceTextView.setText(account.getBalance());
+            AccountData accountData = ((AccountListViewItem.AccountListData) accountListViewItem).getAccountData();
+            accountDisplayTextView.setText(accountData.getName());
+            accountNumberTextView.setText(accountData.getNumber());
+            accountBalanceTextView.setText(accountData.getBalance());
             topDividerView.setVisibility(isFirst ? View.GONE : View.VISIBLE);
             bottomDividerView.setVisibility(isLast ? View.VISIBLE : View.GONE);
 
             accountConstraintView.setOnClickListener(view -> {
                 Context context = itemView.getContext();
-                context.startActivity(AccountDetailsActivity.Companion.getIntent(context, buildAccountData(account)));
+                context.startActivity(AccountDetailsActivity.Companion.getIntent(context, accountData));
             });
         }
-
-        private AccountData buildAccountData(Account account) {
-            return new AccountData(account.getBalance(), account.getName(), account.getNumber(), AccountDataType.valueOf(account.getType().toString()));
-        }
+//        private AccountData buildAccountData(Account account) {
+//            return new AccountData(account.getBalance(), account.getName(), account.getNumber(), AccountDataType.valueOf(account.getType().toString()));
+//        }
     }
 
     public abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
