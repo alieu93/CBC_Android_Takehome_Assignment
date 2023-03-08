@@ -37,7 +37,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        holder.setListData(accountList.get(position), position == 0, position == accountList.size() - 1);
+        holder.setListData(accountList.get(position), position == accountList.size() - 1);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         }
 
         @Override
-        void setListData(AccountListViewItem accountListViewItem, boolean isFirst, boolean isLast) {
+        void setListData(AccountListViewItem accountListViewItem, boolean isLast) {
             AccountListViewItem.AccountHeader header = (AccountListViewItem.AccountHeader) accountListViewItem;
             String headerString = header.getAccountDataType().getTypeName();
             assert headerString != null;
@@ -90,12 +90,11 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         }
 
         @Override
-        void setListData(AccountListViewItem accountListViewItem, boolean isFirst, boolean isLast) {
+        void setListData(AccountListViewItem accountListViewItem, boolean isLast) {
             AccountData accountData = ((AccountListViewItem.AccountListData) accountListViewItem).getAccountData();
             accountDisplayTextView.setText(accountData.getName());
             accountNumberTextView.setText(accountData.getNumber());
             accountBalanceTextView.setText(accountData.getBalance());
-            topDividerView.setVisibility(isFirst ? View.GONE : View.VISIBLE);
             bottomDividerView.setVisibility(isLast ? View.VISIBLE : View.GONE);
 
             accountConstraintView.setOnClickListener(view -> {
@@ -114,6 +113,6 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
             super(itemView);
         }
 
-        abstract void setListData(AccountListViewItem accountListViewItem, boolean isFirst, boolean isLast);
+        abstract void setListData(AccountListViewItem accountListViewItem, boolean isLast);
     }
 }
