@@ -48,7 +48,6 @@ class AccountDetailsFragment : Fragment() {
         }
 
         accountsDetailViewModel.showTransactionError.observe(viewLifecycleOwner) { showTransactionError ->
-            //TODO Implement error UI and show it
             showError(showTransactionError)
         }
 
